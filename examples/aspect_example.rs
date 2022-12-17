@@ -1,9 +1,9 @@
 extern crate macroquad;
-extern crate macroquad_aspects;
+extern crate macroquad_aspect;
 
 use macroquad::prelude::*;
-use macroquad_aspects::bounds::ScreenBounds;
-use macroquad_aspects::prelude::*;
+use macroquad_aspect::bounds::ScreenBounds;
+use macroquad_aspect::prelude::*;
 
 
 #[macroquad::main("Test")]
