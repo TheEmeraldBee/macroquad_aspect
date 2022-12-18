@@ -1,4 +1,5 @@
 #![allow(dead_code)]
 
-pub use crate::window::draw_window;
-pub use crate::aspect::{Aspects, Aspect};
+pub use crate::window::*;
+pub use crate::aspect::*;
+pub use crate::bounds::*;
