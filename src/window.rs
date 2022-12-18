@@ -7,7 +7,7 @@ use crate::bounds::ScreenBounds;
 
 pub struct WindowContext {
     pub camera: Camera2D,
-    render_target: RenderTarget,
+    pub render_target: RenderTarget,
     pub screen_bounds: ScreenBounds,
     pub aspects: Aspects,
 
