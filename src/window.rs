@@ -102,4 +102,6 @@ pub fn draw_window(context: &mut WindowContext) {
         context.camera.zoom = vec2(1.0 / context.active_aspect.width, 1.0 / context.active_aspect.height);
         context.camera.render_target = Some(context.render_target);
     }
+
+    context.last_window_size = vec2(screen_width(), screen_height());
 }
