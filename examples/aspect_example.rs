@@ -26,7 +26,7 @@ async fn main() {
         set_camera(&window_context.camera);
         clear_background(WHITE);
 
-        draw_rectangle(0.0, 0.0, 50.0, 50.0, GREEN);
+        draw_rectangle(0.0, 150.0, 50.0, 50.0, GREEN);
 
         draw_window(&mut window_context);
         next_frame().await

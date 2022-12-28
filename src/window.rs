@@ -88,6 +88,7 @@ pub fn draw_window(context: &mut WindowContext) {
         WHITE,
         DrawTextureParams {
             dest_size: Some(context.cur_size.clone()),
+            flip_y: true,
             ..Default::default()
         },
     );
