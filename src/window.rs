@@ -1,6 +1,6 @@
 use macroquad::camera::set_default_camera;
 use macroquad::color::{BLACK, WHITE};
-use macroquad::math::{Vec2, vec2};
+use macroquad::math::{Rect, Vec2, vec2};
 use macroquad::prelude::{Camera2D, clear_background, draw_texture_ex, DrawTextureParams, render_target, RenderTarget, screen_height, screen_width};
 use crate::aspect::{Aspect, Aspects};
 use crate::bounds::ScreenBounds;
@@ -99,7 +99,7 @@ pub fn draw_window(context: &mut WindowContext) {
         context.screen_bounds.bottom_right = context.screen_bounds.top_left.clone() + context.cur_size;
 
         context.render_target = render_target(context.active_aspect.width as u32 * 12, context.active_aspect.height as u32 * 12);
-        context.camera.zoom = vec2(1.0 / context.active_aspect.width, 1.0 / context.active_aspect.height);
+        context.camera = Camera2D::from_display_rect(Rect::new(0.0, 0.0, context.active_aspect.width, context.active_aspect.height));
         context.camera.render_target = Some(context.render_target);
     }
 
