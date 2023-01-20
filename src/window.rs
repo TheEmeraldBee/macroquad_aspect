@@ -5,6 +5,7 @@ use macroquad::prelude::{Camera2D, clear_background, draw_texture_ex, DrawTextur
 use crate::aspect::{Aspect, Aspects};
 use crate::bounds::ScreenBounds;
 
+#[derive(Clone)]
 pub struct WindowContext {
     pub camera: Camera2D,
     pub render_target: RenderTarget,
@@ -47,7 +48,7 @@ pub fn draw_window(context: &mut WindowContext) {
             let diff_height = (screen_height() - aspect.height as f32) / aspect.aspect;
 
             #[allow(unused_assignments)]
-                let mut size = Vec2::default();
+            let mut size = Vec2::default();
 
             if diff_width <= diff_height {
                 size = vec2(screen_width(), screen_width() * aspect.aspect);

@@ -1,5 +1,6 @@
 use macroquad::math::Vec2;
 
+#[derive(Clone, Debug)]
 pub struct ScreenBounds {
     pub top_left: Vec2,
     pub bottom_right: Vec2,
