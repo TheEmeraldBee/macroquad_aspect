@@ -12,6 +12,8 @@ pub struct WindowContext {
     pub screen_bounds: ScreenBounds,
     pub aspects: Aspects,
 
+    pub active_screen_size: Vec2,
+
     last_window_size: Vec2,
     cur_size: Vec2,
     active_aspect: Aspect
@@ -28,6 +30,7 @@ impl WindowContext {
                 aspect: 0.0
             },
             aspects,
+            active_screen_size: vec2(0.0, 0.0),
             last_window_size: vec2(-100.0, -100.0),
             cur_size: Default::default(),
             active_aspect: Aspect::new(0.0, 0.0)
@@ -74,7 +77,8 @@ pub fn draw_window(context: &mut WindowContext) {
         }
 
         context.cur_size = size;
-        context.active_aspect = active_aspect;
+        context.active_aspect = active_aspect.clone();
+        context.active_screen_size = vec2(active_aspect.width.clone(), active_aspect.height.clone());
     }
 
     // Draw The Screen
