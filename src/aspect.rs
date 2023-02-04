@@ -1,7 +1,7 @@
 
 pub type Aspects = Vec<Aspect>;
 
-#[derive(Clone)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Aspect {
     pub width: f32,
     pub height: f32,

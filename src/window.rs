@@ -65,33 +65,34 @@ pub fn draw_window(context: &mut WindowContext) {
 
                 sizes.push((aspect.clone(), size.clone()));
             }
+
+            let mut size = vec2(0.0, 0.0);
+            let mut active_aspect = Aspect::new(0.0, 0.0);
+
+            for (aspect, check_size) in &sizes {
+                if check_size.x > size.x || check_size.y > size.y {
+                    size = check_size.clone();
+                    active_aspect = aspect.clone();
+                }
+            }
+
+            if size.x == 0.0 || size.y == 0.0 {
+                panic!("draw_window(): Size included Zero")
+            }
+
+            context.cur_size = size;
+            context.active_aspect = active_aspect.clone();
+            context.active_screen_size = vec2(active_aspect.width.clone(), active_aspect.height.clone());
         } else {
             let wanted_aspect = screen_height() / screen_width();
             let check_aspect = context.aspects[0].clone();
 
             let new_aspect = Aspect::new(check_aspect.height / wanted_aspect, check_aspect.height);
 
-            sizes.push((new_aspect, vec2(screen_width(), screen_height())))
+            context.cur_size = vec2(screen_width(), screen_height());
+            context.active_aspect = new_aspect;
+            context.active_screen_size = vec2(new_aspect.width, new_aspect.height);
         }
-
-        let mut size = vec2(0.0, 0.0);
-        let mut active_aspect = Aspect::new(0.0, 0.0);
-
-        for (aspect, check_size) in &sizes {
-            if check_size.x > size.x || check_size.y > size.y {
-                size = check_size.clone();
-                active_aspect = aspect.clone();
-            }
-        }
-
-        if size.x == 0.0 || size.y == 0.0 {
-            panic!("draw_window(): Size included Zero")
-        }
-
-
-        context.cur_size = size;
-        context.active_aspect = active_aspect.clone();
-        context.active_screen_size = vec2(active_aspect.width.clone(), active_aspect.height.clone());
     }
 
     // Draw The Screen
@@ -99,17 +100,31 @@ pub fn draw_window(context: &mut WindowContext) {
 
     clear_background(BLACK);
 
-    draw_texture_ex(
-        context.render_target.texture,
-        screen_width() / 2.0 - context.cur_size.x / 2.0,
-        screen_height() / 2.0 - context.cur_size.y / 2.0,
-        WHITE,
-        DrawTextureParams {
-            dest_size: Some(context.cur_size.clone()),
-            flip_y: true,
-            ..Default::default()
-        },
-    );
+    if context.forced {
+        draw_texture_ex(
+            context.render_target.texture,
+            screen_width() / 2.0 - context.cur_size.x / 2.0,
+            screen_height() / 2.0 - context.cur_size.y / 2.0,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(context.cur_size.clone()),
+                flip_y: true,
+                ..Default::default()
+            },
+        );
+    } else {
+        draw_texture_ex(
+            context.render_target.texture,
+            0.0,
+            0.0,
+            WHITE,
+            DrawTextureParams {
+                dest_size: Some(context.cur_size.clone()),
+                flip_y: true,
+                ..Default::default()
+            },
+        );
+    }
 
     // Only fix these issues if the screen needed to be updated
     if dirty {

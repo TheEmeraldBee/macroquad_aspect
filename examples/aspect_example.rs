@@ -21,6 +21,7 @@ async fn main() {
         Aspect::new(1680.0, 1050.0)
         ]
     );
+    window_context.forced = false;
 
     loop {
         set_camera(&window_context.camera);
