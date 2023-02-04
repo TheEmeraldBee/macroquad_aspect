@@ -11,6 +11,8 @@ pub struct WindowContext {
     pub render_target: RenderTarget,
     pub screen_bounds: ScreenBounds,
     pub aspects: Aspects,
+    /// If true will always take the closest aspect and scale the screen size based off that
+    pub forced: bool,
 
     pub active_screen_size: Vec2,
 
@@ -30,6 +32,7 @@ impl WindowContext {
                 aspect: 0.0
             },
             aspects,
+            forced: false,
             active_screen_size: vec2(0.0, 0.0),
             last_window_size: vec2(-100.0, -100.0),
             cur_size: Default::default(),
@@ -46,20 +49,29 @@ pub fn draw_window(context: &mut WindowContext) {
 
     if vec2(screen_width(), screen_height()) != context.last_window_size {
         dirty = true;
-        for aspect in &context.aspects {
-            let diff_width = (screen_width() - aspect.width as f32) * aspect.aspect;
-            let diff_height = (screen_height() - aspect.height as f32) / aspect.aspect;
 
-            #[allow(unused_assignments)]
-            let mut size = Vec2::default();
+        if context.forced {
+            for aspect in &context.aspects {
+                let diff_width = (screen_width() - aspect.width as f32) * aspect.aspect;
+                let diff_height = (screen_height() - aspect.height as f32) / aspect.aspect;
 
-            if diff_width <= diff_height {
-                size = vec2(screen_width(), screen_width() * aspect.aspect);
-            } else {
-                size = vec2(screen_height() / aspect.aspect, screen_height())
+                let size;
+
+                if diff_width <= diff_height {
+                    size = vec2(screen_width(), screen_width() * aspect.aspect);
+                } else {
+                    size = vec2(screen_height() / aspect.aspect, screen_height())
+                }
+
+                sizes.push((aspect.clone(), size.clone()));
             }
+        } else {
+            let wanted_aspect = screen_height() / screen_width();
+            let check_aspect = context.aspects[0].clone();
 
-            sizes.push((aspect.clone(), size.clone()));
+            let new_aspect = Aspect::new(check_aspect.height / wanted_aspect, check_aspect.height);
+
+            sizes.push((new_aspect, vec2(screen_width(), screen_height())))
         }
 
         let mut size = vec2(0.0, 0.0);
@@ -75,6 +87,7 @@ pub fn draw_window(context: &mut WindowContext) {
         if size.x == 0.0 || size.y == 0.0 {
             panic!("draw_window(): Size included Zero")
         }
+
 
         context.cur_size = size;
         context.active_aspect = active_aspect.clone();
