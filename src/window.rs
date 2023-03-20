@@ -14,6 +14,7 @@ pub struct WindowContext {
     /// If true will always take the closest aspect and scale the screen size based off that
     pub forced: bool,
     pub scale: u32,
+    pub dirty: bool,
 
     pub active_screen_size: Vec2,
 
@@ -35,6 +36,7 @@ impl WindowContext {
             aspects,
             forced: false,
             scale: 4,
+            dirty: true,
             active_screen_size: vec2(0.0, 0.0),
             last_window_size: vec2(-100.0, -100.0),
             cur_size: Default::default(),
@@ -47,10 +49,8 @@ pub fn draw_window(context: &mut WindowContext) {
 
     let mut sizes = vec![];
 
-    let mut dirty = false;
-
     if vec2(screen_width(), screen_height()) != context.last_window_size {
-        dirty = true;
+        context.dirty = true;
 
         if context.forced {
             for aspect in &context.aspects {
@@ -129,13 +129,14 @@ pub fn draw_window(context: &mut WindowContext) {
     }
 
     // Only fix these issues if the screen needed to be updated
-    if dirty {
+    if context.dirty {
         context.screen_bounds.top_left = vec2(screen_width() / 2.0 - context.cur_size.x / 2.0, screen_height() / 2.0 - context.cur_size.y / 2.0);
         context.screen_bounds.bottom_right = context.screen_bounds.top_left.clone() + context.cur_size;
 
         context.render_target = render_target(context.active_aspect.width as u32 * context.scale, context.active_aspect.height as u32 * context.scale);
         context.camera = Camera2D::from_display_rect(Rect::new(0.0, 0.0, context.active_aspect.width, context.active_aspect.height));
         context.camera.render_target = Some(context.render_target);
+        context.dirty = false;
     }
 
     context.last_window_size = vec2(screen_width(), screen_height());
