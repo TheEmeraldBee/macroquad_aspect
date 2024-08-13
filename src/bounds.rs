@@ -1,10 +1,10 @@
 use macroquad::math::Vec2;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct ScreenBounds {
     pub top_left: Vec2,
     pub bottom_right: Vec2,
-    pub aspect: f32
+    pub aspect: f32,
 }
 
 impl ScreenBounds {
@@ -12,7 +12,7 @@ impl ScreenBounds {
         Self {
             top_left: Default::default(),
             bottom_right: Default::default(),
-            aspect: 0.0
+            aspect: 0.0,
         }
     }
 }
